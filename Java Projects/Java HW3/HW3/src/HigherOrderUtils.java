@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -52,7 +53,7 @@ public class HigherOrderUtils {
 	
 	};
 	
-	public static NamedBiFunction<Double, Double , Double> mult = new NamedBiFunction<Double, Double, Double>() {
+	public static NamedBiFunction<Double, Double , Double> multiply = new NamedBiFunction<Double, Double, Double>() {
 		
 		@Override
 		public String name() {
@@ -67,7 +68,7 @@ public class HigherOrderUtils {
 	
 	};
 	
-	public static NamedBiFunction<Double, Double , Double> div = new NamedBiFunction<Double, Double, Double>() {
+	public static NamedBiFunction<Double, Double , Double> divide = new NamedBiFunction<Double, Double, Double>() {
 		
 		@Override
 		public String name() {
@@ -118,15 +119,36 @@ public class HigherOrderUtils {
 	
 	// args == number to manipulate  bifunctions === IE add mult div minus
 	
-	public static <T> T zip(List<T> args, List<BiFunction<T, T, T>> bifunctions) {
+	public static <T> T zip(List<T> args, List<? extends BiFunction<T, T, T>> bifunctions) {
 
 		if(args.size() != bifunctions.size()+1) throw new IllegalArgumentException();
 		
-		else {
+		if(args.size() == 0) return null;
+			
+		for (int i = 1; i < args.size(); i++) {
+
+			BiFunction<T, T, T> function = bifunctions.get(i-1);
+			T result = function.apply(args.get(i-1), args.get(i));
+			args.set(i, result);
 			
 		}
-		
-		
-		return null;
+
+		return args.get(args.size() - 1);
+	
 	}
+	
+	/*
+	public static void main(String... args) {
+		List<Double> numbers = Arrays.asList(-0.5, 2d, 3d, 0d, 4d); // documentation example
+		List<NamedBiFunction<Double, Double, Double>> operations = Arrays.asList(add,multiply,add,divide);
+		Double d = zip(numbers, operations); // expected correct value: 1.125
+		// different use case, not with NamedBiFunction objects
+		List<String> strings = Arrays.asList("a", "n", "t");
+		// note the syntax of this lambda expression
+		BiFunction<String, String, String> concat = (s, t) -> s + t;
+		String s = zip(strings, Arrays.asList(concat, concat)); // expected correct value: "ant"
+		}
+	
+	*/
+	
 }
