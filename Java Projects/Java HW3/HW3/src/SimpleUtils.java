@@ -1,5 +1,4 @@
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,15 +23,22 @@ public class SimpleUtils {
 	*/
 	
 	public static <T extends Comparable<T>> T least(Collection<T> items, boolean from_start) {
-		//items.stream()
-		//.filter( x -> x != null)
-		//.min(Comparator.naturalOrder()).get();
 		
 		
+	        return from_start ? items.stream()
+	        						.reduce((x,y) ->{
+	        							if(x.compareTo(y) <= y.compareTo(x)) return x;
+	        							else return y;
+	        						})
+	        						.orElse(null) :
+	        					items.stream()
+	        						.reduce((x,y) ->{
+	        							if(x.compareTo(y) < y.compareTo(x)) return x;
+	        							else return y;
+	        						})
+	        						.orElse(null);
+	
 		
-		return items	
-				.stream()
-				.min(Comparator.naturalOrder()).orElse(null);
 	}
 	
 
